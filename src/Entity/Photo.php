@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PhotoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -31,11 +32,12 @@ class Photo
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"annonce:get"})
      */
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
@@ -43,6 +45,12 @@ class Photo
      * @ORM\ManyToOne(targetEntity=Annonce::class, inversedBy="photos")
      */
     private $annonce;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"annonce:get"})
+     */
+    private $path;
 
     public function getId(): ?int
     {
@@ -105,6 +113,18 @@ class Photo
     public function setAnnonce(?Annonce $annonce): self
     {
         $this->annonce = $annonce;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(?string $path): self
+    {
+        $this->path = $path;
 
         return $this;
     }

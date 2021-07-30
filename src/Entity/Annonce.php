@@ -2,14 +2,39 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AnnonceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"annonce:get_lite"}
+ *              }
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *             "normalization_context"={
+ *                  "groups"={"annonce:get"}
+ *              }
+ *          }
+ *     }
+ *)
+ * @ApiFilter(SearchFilter::class, properties={"modele.nom","modele.marque.nom"} )
+ * @ApiFilter(BooleanFilter::Class, properties={"estManuel"})
+ * @ApiFilter(RangeFilter::class, properties={"prix" , "kilometrage"} )
+ * @ApiFilter(DateFilter::class,properties={"dateDepot" , "annee" })
  * @ORM\Entity(repositoryClass=AnnonceRepository::class)
  */
 class Annonce
@@ -23,65 +48,77 @@ class Annonce
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"annonce:get"})
      */
     private $kilometrage;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"annonce:get"})
      */
     private $dateDepot;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"annonce:get"})
      */
     private $reference;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"annonce:get"})
      */
     private $estManuel;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"annonce:get"})
      */
     private $annee;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"annonce:get"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Groups({"annonce:get"})
      */
     private $prix;
 
     /**
      * @ORM\ManyToOne(targetEntity=Modele::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"annonce:get"})
      */
     private $modele;
 
     /**
      * @ORM\ManyToOne(targetEntity=Carburant::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"annonce:get"})
      */
     private $carburant;
 
     /**
      * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"annonce:get"})
      */
     private $categorie;
 
     /**
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="annonce")
+     * @Groups({"annonce:get"})
      */
     private $photos;
 
     /**
      * @ORM\ManyToOne(targetEntity=Garage::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"annonce:get"})
      */
     private $garage;
 
