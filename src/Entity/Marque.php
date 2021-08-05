@@ -27,9 +27,14 @@ class Marque
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity=modele::class, mappedBy="marque")
+     * @ORM\OneToMany(targetEntity=Modele::class, mappedBy="marque")
      */
     private $modeles;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $idApi;
 
     public function __construct()
     {
@@ -79,6 +84,18 @@ class Marque
                 $modele->setMarque(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdApi(): ?int
+    {
+        return $this->idApi;
+    }
+
+    public function setIdApi(int $idApi): self
+    {
+        $this->idApi = $idApi;
 
         return $this;
     }
