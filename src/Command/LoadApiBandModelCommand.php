@@ -69,16 +69,48 @@ class LoadApiBandModelCommand extends Command
     {
         $response = $this->client->request('GET', 'https://the-vehicles-api.herokuapp.com/vehicleBrands');
         $content = $response->toArray();
-        dump($content);
-        foreach($content as $item) {
-            $brand = new Marque();
-            $brand->setNom($item['brand']);
-            $idApi = $item['self']['href'];
-            $idapi = explode('/',$idapi);
-            $idapi = end()
+
+        foreach($content['_embedded']['vehicleBrands'] as $item) {
+            $idApi = $item['_links']['self']['href'];
+            $idApi = explode('/',$idApi);
+            $idApi = end($idApi);
+            $marqueEntity = $this->marqueRepository->findOneBy(['idApi'=>$idApi]);
+            if ($marqueEntity === null)
+            {
+                $brand = new Marque();
+                $brand->setNom($item['brand']);
+                $idApi = $item['_links']['self']['href'];
+                $idApi = explode('/',$idApi);
+                $idApi = end($idApi);
+                $brand->setIdApi($idApi);
+                $this->em->persist($brand);
+            }
         }
+        $this->em->flush();
 
+        $tabtemp = [];
+        $marqueEntities = $this->marqueRepository->findAll();
+        foreach ($marqueEntities as $item){
+            $idApisearch = $item->getIdApi();
 
+            $response = $this->client->request('GET', 'https://the-vehicles-api.herokuapp.com/vehicleModels/search/findByBrandId?brandId='.$idApisearch);
+            $content = $response->toArray();
+
+            $marqueEntity = $this->marqueRepository->findOneBy(['idApi'=>$idApisearch]);
+            foreach ($content['_embedded']['vehicleModels'] as $modeleApi)
+            {
+                $modeleEntity = $this->modeleRepository->findOneBy(['nom'=>$modeleApi['model']]);
+                if($modeleEntity === null)
+                {
+                    $modele = new Modele();
+                    $modele->setNom($modeleApi['model']);
+                    $modele->setMarque($marqueEntity);
+                    $this->em->persist($modele);
+                }
+            }
+            $this->em->flush();
+        }
+        $output->writeln('entity brand and model updated successful');
         return Command::SUCCESS;
     }
 }
