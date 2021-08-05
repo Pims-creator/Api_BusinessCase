@@ -24,13 +24,14 @@ class Modele
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $nom;
 
     /**
      * @ORM\ManyToOne(targetEntity=Marque::class, inversedBy="modeles")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"annonce:get_lite"})
      */
     private $marque;
 

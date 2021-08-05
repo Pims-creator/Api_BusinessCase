@@ -7,7 +7,13 @@ use App\Repository\AdresseRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"= {
+ *              "security"="is_granted('ROLE_USER')"
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=AdresseRepository::class)
  */
 class Adresse
@@ -45,7 +51,7 @@ class Adresse
     private $ligne3;
 
     /**
-     * @ORM\OneToOne(targetEntity=garage::class, inversedBy="adresse", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Garage::class, inversedBy="adresse", cascade={"persist", "remove"})
      */
     private $garage;
 

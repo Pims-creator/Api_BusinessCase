@@ -23,19 +23,30 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
  *              }
  *          }
  *     },
+ *
  *     itemOperations={
  *          "get"={
  *             "normalization_context"={
- *                  "groups"={"annonce:get"}
+ *                  "groups"={"annonce:get" ,"annonce:get_lite" }
  *              }
+ *          },
+ *          "put"={
+ *              "security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"
+ *          },
+ *          "delete"={
+ *              "security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"
+ *          },
+ *          "patch"={
+ *              "security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"
  *          }
- *     }
+ *      },
  *)
+ * @ORM\Entity(repositoryClass=AnnonceRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"modele.nom","modele.marque.nom"} )
  * @ApiFilter(BooleanFilter::Class, properties={"estManuel"})
  * @ApiFilter(RangeFilter::class, properties={"prix" , "kilometrage"} )
  * @ApiFilter(DateFilter::class,properties={"dateDepot" , "annee" })
- * @ORM\Entity(repositoryClass=AnnonceRepository::class)
+ *
  */
 class Annonce
 {
@@ -43,36 +54,37 @@ class Annonce
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"annonce:get_lite"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $kilometrage;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $dateDepot;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $reference;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $estManuel;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $annee;
 
@@ -84,34 +96,34 @@ class Annonce
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $prix;
 
     /**
      * @ORM\ManyToOne(targetEntity=Modele::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $modele;
 
     /**
      * @ORM\ManyToOne(targetEntity=Carburant::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $carburant;
 
     /**
      * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $categorie;
 
     /**
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="annonce")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $photos;
 

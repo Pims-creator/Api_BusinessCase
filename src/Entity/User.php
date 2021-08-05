@@ -67,6 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $garages;
 
+
     public function __construct()
     {
         $this->garages = new ArrayCollection();
