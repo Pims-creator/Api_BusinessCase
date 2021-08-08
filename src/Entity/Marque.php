@@ -7,8 +7,26 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
+ * @ApiResource(
+ *     attributes={
+ *      "security"="is_granted('ROLE_ADMIN')"
+ *      },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"marque:get"}
+ *              },
+ *          },
+ *          "delete",
+ *          "patch"
+ *     }
+ * )
+ *
  * @ORM\Entity(repositoryClass=MarqueRepository::class)
  */
 class Marque
@@ -17,17 +35,25 @@ class Marque
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"marque:get" , "modele:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annonce:get_lite"})
+     * @Groups({"annonce:get_lite" , "marque:get" , "modele:get"})
+     * @Assert\Length(
+     *     min=2,
+     *     max=25,
+     *     minMessage="La Marque doit avoir au moin 3 caractères",
+     *     maxMessage="La Marque ne doit pas avoir plus de 10 caractère"
+     * )
      */
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity=Modele::class, mappedBy="marque")
+     * @ORM\OneToMany(targetEntity=Modele::class, mappedBy="marque" , cascade={"remove"})
+     * @Groups({"marque:get"})
      */
     private $modeles;
 

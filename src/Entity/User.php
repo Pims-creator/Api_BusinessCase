@@ -8,8 +8,34 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
+ *
+ * @ApiResource(
+ *     attributes={
+ *      "security"="is_granted('ROLE_ADMIN') or object == user"
+ *     },
+ *     collectionOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                      "groups"={"user:get_lite"}
+ *              }
+ *          },
+ *          "post",
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                      "groups"={"user:get" , "user:get_lite"}
+ *              }
+ *          }
+ *     }
+ * )
+ *
+ *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -18,16 +44,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user:get_lite"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user:get_lite"})
+     * @Assert\Email(
+     *     message = "l' email '{{ value }}' n'est pas un email valide."
+     * )
+     *
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"user:get_lite"})
      */
     private $roles = [];
 
@@ -39,31 +72,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:get_lite"})
      */
     private $identifiant;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:get_lite"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user:get_lite"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user:get_lite"})
      */
     private $numSiret;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:get_lite"})
      */
     private $numTel;
 
     /**
-     * @ORM\OneToMany(targetEntity=Garage::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Garage::class, mappedBy="user", cascade={"remove"})
+     * @Groups({"user:get"})
      */
     private $garages;
 

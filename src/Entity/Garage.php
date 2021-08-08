@@ -10,7 +10,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={
+ *      "security"="is_granted('ROLE_ADMIN') or object.user == user"
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"garage:get"}
+ *              },
+ *          },
+ *          "delete",
+ *          "patch"
+ *     }
+ *
+ *
+ *
+ * )
  * @ORM\Entity(repositoryClass=GarageRepository::class)
  */
 class Garage
@@ -19,28 +35,32 @@ class Garage
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get" , "user:get" , "garage:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:get" , "garage:get"})
      */
     private $nom;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="garages")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"garage:get"})
      */
-    private $user;
+    public $user;
 
     /**
-     * @ORM\OneToOne(targetEntity=Adresse::class, mappedBy="garage", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Adresse::class, mappedBy="garage", cascade={"persist", "remove"}))
+     * @Groups({"garage:get"})
      */
     private $adresse;
 
     /**
-     * @ORM\OneToMany(targetEntity=Annonce::class, mappedBy="garage", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Annonce::class, mappedBy="garage", cascade={"remove"})
+     * @Groups({"garage:get"})
      */
     private $annonces;
 

@@ -21,9 +21,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
  *              "normalization_context"={
  *                  "groups"={"annonce:get_lite"}
  *              }
- *          }
+ *          },
+ *          "post"={
+ *              "security"="is_granted('ROLE_USER')"
+ *          },
  *     },
- *
  *     itemOperations={
  *          "get"={
  *             "normalization_context"={
@@ -31,13 +33,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
  *              }
  *          },
  *          "put"={
- *              "security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"
+ *              "security"="is_granted('ROLE_ADMIN') or object.garage.user == user"
  *          },
  *          "delete"={
- *              "security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"
+ *              "security"="is_granted('ROLE_ADMIN') or object.garage.user == user"
  *          },
  *          "patch"={
- *              "security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"
+ *              "security"="is_granted('ROLE_ADMIN') or object.garage.user == user"
  *          }
  *      },
  *)
@@ -46,7 +48,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
  * @ApiFilter(BooleanFilter::Class, properties={"estManuel"})
  * @ApiFilter(RangeFilter::class, properties={"prix" , "kilometrage"} )
  * @ApiFilter(DateFilter::class,properties={"dateDepot" , "annee" })
- *
  */
 class Annonce
 {
@@ -54,7 +55,7 @@ class Annonce
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"annonce:get_lite"})
+     * @Groups({"annonce:get_lite" , "garage:get"})
      */
     private $id;
 
@@ -132,7 +133,7 @@ class Annonce
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"annonce:get"})
      */
-    private $garage;
+    public $garage;
 
     public function __construct()
     {

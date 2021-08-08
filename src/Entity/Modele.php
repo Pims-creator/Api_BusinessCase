@@ -10,7 +10,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={
+ *      "security"="is_granted('ROLE_ADMIN')"
+ *      },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"modele:get"}
+ *              },
+ *          },
+ *          "delete",
+ *          "patch"
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=ModeleRepository::class)
  */
 class Modele
@@ -19,19 +32,20 @@ class Modele
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"marque:get" , "modele:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annonce:get_lite"})
+     * @Groups({"annonce:get_lite" , "marque:get" , "modele:get"})
      */
     private $nom;
 
     /**
      * @ORM\ManyToOne(targetEntity=Marque::class, inversedBy="modeles")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"annonce:get_lite"})
+     * @Groups({"annonce:get_lite" , "modele:get"})
      */
     private $marque;
 

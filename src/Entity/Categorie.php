@@ -10,7 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={
+ *      "security"="is_granted('ROLE_ADMIN')"
+ *      },
+ *     itemOperations={
+ *          "get",
+ *          "delete",
+ *          "patch"
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=CategorieRepository::class)
  */
 class Categorie

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AdresseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
@@ -22,36 +23,43 @@ class Adresse
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"garage:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"garage:get"})
      */
     private $commune;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"garage:get"})
      */
     private $codePostal;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"garage:get"})
      */
     private $ligne1;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"garage:get"})
      */
     private $ligne2;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"garage:get"})
      */
     private $ligne3;
 
     /**
      * @ORM\OneToOne(targetEntity=Garage::class, inversedBy="adresse", cascade={"persist", "remove"})
+     * @Groups({"garage:get"})
      */
     private $garage;
 

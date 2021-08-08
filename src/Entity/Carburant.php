@@ -9,7 +9,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={
+ *      "security"="is_granted('ROLE_ADMIN')"
+ *      },
+ *     itemOperations={
+ *          "get",
+ *          "delete",
+ *          "patch"
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=CarburantRepository::class)
  */
 class Carburant

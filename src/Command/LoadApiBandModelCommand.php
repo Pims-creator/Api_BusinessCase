@@ -67,8 +67,13 @@ class LoadApiBandModelCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $i=0;
+
         $response = $this->client->request('GET', 'https://the-vehicles-api.herokuapp.com/vehicleBrands');
         $content = $response->toArray();
+
+        $i++;
+
 
         foreach($content['_embedded']['vehicleBrands'] as $item) {
             $idApi = $item['_links']['self']['href'];
@@ -95,6 +100,7 @@ class LoadApiBandModelCommand extends Command
 
             $response = $this->client->request('GET', 'https://the-vehicles-api.herokuapp.com/vehicleModels/search/findByBrandId?brandId='.$idApisearch);
             $content = $response->toArray();
+            $i++;
 
             $marqueEntity = $this->marqueRepository->findOneBy(['idApi'=>$idApisearch]);
             foreach ($content['_embedded']['vehicleModels'] as $modeleApi)
@@ -111,6 +117,7 @@ class LoadApiBandModelCommand extends Command
             $this->em->flush();
         }
         $output->writeln('entity brand and model updated successful');
+        dump($i);
         return Command::SUCCESS;
     }
 }
