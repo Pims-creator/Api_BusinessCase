@@ -45,8 +45,8 @@ class Marque
      * @Assert\Length(
      *     min=2,
      *     max=25,
-     *     minMessage="La Marque doit avoir au moin 3 caractères",
-     *     maxMessage="La Marque ne doit pas avoir plus de 10 caractère"
+     *     minMessage="La Marque doit avoir au moins 3 caractères",
+     *     maxMessage="La Marque ne doit pas avoir plus de 10 caractères"
      * )
      */
     private $nom;

@@ -13,6 +13,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
@@ -62,6 +63,11 @@ class Annonce
     /**
      * @ORM\Column(type="integer")
      * @Groups({"annonce:get_lite"})
+     * @Assert\Type(
+     *     type="integer",
+     *     message="le kilometrage doit etre un nombre entier."
+     * )
+     *
      */
     private $kilometrage;
 
@@ -92,12 +98,22 @@ class Annonce
     /**
      * @ORM\Column(type="text")
      * @Groups({"annonce:get"})
+     * @Assert\Length(
+     *     min=10,
+     *     max=500,
+     *     minMessage="La description doit avoir au moins 10 caractères",
+     *     maxMessage="La description ne doit pas avoir plus de 500 caractères"
+     * )
      */
     private $description;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      * @Groups({"annonce:get_lite"})
+     * @Assert\Type(
+     *     type="numeric",
+     *     message="le prix doit etre un nombre."
+     * )
      */
     private $prix;
 
