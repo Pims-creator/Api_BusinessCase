@@ -61,7 +61,6 @@ class LoadApiBandModelCommand extends Command
         $this
             ->setDescription('Load and compare DB marque modele with ApiBrand')
             ->setHelp('this command reload Api brand and model');
-
     }
 
 
