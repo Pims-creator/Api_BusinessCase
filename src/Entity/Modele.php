@@ -8,23 +8,33 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(
- *     attributes={
- *      "security"="is_granted('ROLE_ADMIN')"
- *      },
- *     itemOperations={
+ *     collectionOperations={
  *          "get"={
  *              "normalization_context"={
  *                  "groups"={"modele:get"}
- *              },
+ *              }
  *          },
- *          "delete",
- *          "patch"
+ *          "post"={
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          },
+ *     },
+ *     itemOperations={
+ *          "get",
+ *          "delete" = {
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          } ,
+ *          "patch"= {
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          } ,
  *     }
  * )
  * @ORM\Entity(repositoryClass=ModeleRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"marque.nom"})
  */
 class Modele
 {

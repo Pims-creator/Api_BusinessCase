@@ -48,7 +48,7 @@ class Photo
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     private $path;
 

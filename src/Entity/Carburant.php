@@ -7,16 +7,28 @@ use App\Repository\CarburantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     attributes={
- *      "security"="is_granted('ROLE_ADMIN')"
- *      },
+ *     collectionOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"carburant:get"}
+ *              }
+ *          },
+ *          "post"={
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          },
+ *     },
  *     itemOperations={
  *          "get",
- *          "delete",
- *          "patch"
+ *          "delete" = {
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          } ,
+ *          "patch"= {
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          } ,
  *     }
  * )
  * @ORM\Entity(repositoryClass=CarburantRepository::class)
@@ -32,6 +44,8 @@ class Carburant
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"annonce:get_lite"})
+     * @Groups({"carburant:get"})
      */
     private $nom;
 

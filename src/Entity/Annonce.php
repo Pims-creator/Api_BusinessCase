@@ -97,7 +97,7 @@ class Annonce
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      * @Assert\Length(
      *     min=10,
      *     max=500,
@@ -147,7 +147,7 @@ class Annonce
     /**
      * @ORM\ManyToOne(targetEntity=Garage::class, inversedBy="annonces")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get_lite"})
      */
     public $garage;
 
